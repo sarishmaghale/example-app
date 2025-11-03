@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Station;
 use App\Helpers\Utility;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StationController extends Controller
 {
@@ -13,8 +14,12 @@ class StationController extends Controller
 
     public function index()
     {
-        $stations = Station::all();
-        return view('display-stations', compact('stations'));
+        if (Auth::check()) {
+            $stations = Station::all();
+            return view('display-stations', compact('stations'));
+        } else {
+            return view('login');
+        }
     }
 
     //display the orders of station

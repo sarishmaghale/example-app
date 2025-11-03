@@ -20,7 +20,7 @@ class UserController extends Controller
         ]);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('products.show');
+            return redirect()->route('stations.index');
         } else {
             return redirect()->route('LogInForm');
         }
@@ -31,6 +31,6 @@ class UserController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('products.show');
+        return redirect()->route('stations.index');
     }
 }

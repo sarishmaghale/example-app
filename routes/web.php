@@ -22,9 +22,8 @@ use App\Http\Controllers\StationController;
 |
 */
 
-Route::get('/', function () {
-    return view('login');
-});
+Route::get('/', [StationController::class, 'index'])->name('stations.index');
+
 Route::get('/products', [HomeController::class, 'show'])->name('products.show');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/products/{products}', [ProductController::class, 'edit'])->name('products.edit');

@@ -49,7 +49,7 @@
                 </tbody>
                 <tfoot class="table-light fw-bold">
                     <tr>
-                        <td colspan="2" class="text-end">Rs. {{ $bills->sum('total') }}</td>
+                        <td colspan="2" class="text-center">Rs. {{ $bills->sum('total') }}</td>
 
                         <td colspan="3" class="text-start">: Total Sales</td>
                     </tr>
