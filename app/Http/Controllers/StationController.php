@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Station;
+use App\Helpers\Utility;
 use Illuminate\Http\Request;
 
 class StationController extends Controller
@@ -27,6 +28,7 @@ class StationController extends Controller
             $billings = $stationInfo->bills()->latest()->first();
             if ($billings) {
                 $orders = $billings->orders()->get();
+                $stationInfo->total_amount = calculateTotalAmount($orders);
             }
         }
         //if station empty, returning empty values

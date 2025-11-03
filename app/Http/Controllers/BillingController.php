@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Utility;
 use App\Models\Billing;
 use App\Models\Order;
 use App\Models\Product;
@@ -20,21 +21,35 @@ class BillingController extends Controller
     {
         $billId = $billings->id;
         $orders = $this->getOrders($billings->id);
+        $billings->total = calculateTotalAmount($orders);
 
-        return view('display-bills', compact('billings', 'orders'));
+        return view('initiate-billing', compact('billings', 'orders'));
     }
 
     public function update(Request $request, Billing $billings)
     {
-
+        $latestBillNo = Billing::whereNotNull('bill_num')->max('bill_num') ?? 0;
         $billings->update([
             'status' => 1,
             'customer_name' => $request->customer_name,
             'total' => $request->total,
+            'bill_num' => $latestBillNo + 1,
         ]);
-        $station_id = $billings->station_id;
+
 
         $billings->station->update(['status' => 0]);
         return redirect()->route('stations.index');
+    }
+
+    public function showBills(Request $request)
+    {
+        if (is_null($request->searchDate)) {
+
+            $date = getTodayDate();
+        } else {
+            $date = $request->searchDate;
+        }
+        $bills = Billing::where('status', 1)->whereDate('created_at', $date)->orderBy('bill_num', 'desc')->get();
+        return view('show-bills', compact('bills'));
     }
 }

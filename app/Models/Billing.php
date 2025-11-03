@@ -13,7 +13,8 @@ class Billing extends Model
         'total',
         'station_id',
         'status',
-        'customer_name'
+        'customer_name',
+        'bill_num',
     ];
 
     public function station()

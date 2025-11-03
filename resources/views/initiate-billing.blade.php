@@ -1,13 +1,6 @@
 @extends('layout')
 
 @section('content')
-    @php
-        //calculate the total sum: add every orders of station
-        $total = $orders->sum(function ($order) {
-            return $order->quantity * $order->product->product_price;
-        });
-    @endphp
-
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-10">
@@ -52,7 +45,7 @@
                                                 <tfoot class="table-light">
                                                     <tr>
                                                         <th colspan="3" class="text-end">Total</th>
-                                                        <th>Rs. {{ $total }}</th>
+                                                        <th>Rs. {{ $billings->total }}</th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -77,7 +70,7 @@
                                                     name="customer_name" placeholder="Full Name" required>
                                             </div>
                                             <input type="hidden" name="id" value="{{ $billings->id }}">
-                                            <input type="hidden" name="total" value="{{ $total }}">
+                                            <input type="hidden" name="total" value="{{ $billings->total }}">
                                             <div class="mb-3">
                                                 <p><strong>Station/Table:</strong> {{ $billings->station->station_name }}
                                                 </p>

@@ -11,7 +11,8 @@ class Station extends Model
 
     protected $fillable = [
         'station_name',
-        'status'
+        'status',
+        'total_amount'
     ];
 
     public function bills()

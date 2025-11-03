@@ -40,5 +40,6 @@ Route::get('/stations/{station}', [StationController::class, 'show'])->name('sta
 Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 Route::delete('/orders', [OrderController::class, 'delete'])->name('orders.delete');
 
-Route::get('/billings/{billings}', [BillingController::class, 'show'])->name('billings.show');
+Route::get('/billings/{billings}', [BillingController::class, 'show'])->name('billings.initiate');
 Route::put('/billings/{billings}', [BillingController::class, 'update'])->name('billings.update');
+Route::get('/bills', [BillingController::class, 'showBills'])->name('bills.show');

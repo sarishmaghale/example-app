@@ -5,12 +5,6 @@
     <div class="container mx-auto p-3">
         <h2 class="text-xl font-bold mb-4">Orders for {{ $stationInfo->station_name }}:</h2>
 
-        @php
-            //calculate the total sum: add every orders of station
-            $total = $orders->sum(function ($order) {
-                return $order->quantity * $order->product->product_price;
-            });
-        @endphp
 
         <!-- Add New Product Form -->
         <form action="{{ route('orders.store') }}" method="POST" class="row g-2 align-items-center mb-4">
@@ -84,7 +78,7 @@
                 <tfoot class="table-light fw-bold">
                     <tr>
                         <td colspan="3" class="text-end">Total Amount:</td>
-                        <td class="text-end">{{ $total }}</td>
+                        <td class="text-end">{{ $stationInfo->total_amount }}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -94,7 +88,7 @@
         <!-- Checkout Button -->
         @if ($orders->isNotEmpty())
             <div class="d-flex justify-content-end mt-3">
-                <form action="{{ route('billings.show', $billings) }}" method="GET">
+                <form action="{{ route('billings.initiate', $billings) }}" method="GET">
                     @csrf
                     <button type="submit" class="btn btn-success btn-lg">Checkout</button>
                 </form>

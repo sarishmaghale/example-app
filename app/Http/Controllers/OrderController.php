@@ -23,6 +23,7 @@ class OrderController extends Controller
             $billing = Billing::create([
                 'station_id' =>  $station_id,
                 'total' => 0,
+                'customer_name' => ""
             ]);
             //add orders including that billing_id
             $orders = Order::create([

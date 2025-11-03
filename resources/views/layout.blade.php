@@ -42,7 +42,7 @@
                         <a class="nav-link" href="{{ route('stations.index') }}">Stations</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">..</a>
+                        <a class="nav-link" href="{{ route('bills.show') }}">Bills</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
