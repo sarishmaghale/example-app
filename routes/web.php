@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\BillingController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StationController;
+use App\Http\Controllers\TranslatorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,9 +23,10 @@ use App\Http\Controllers\StationController;
 |
 */
 
-Route::get('/', [StationController::class, 'index'])->name('stations.index');
 
-Route::get('/products', [HomeController::class, 'show'])->name('products.show');
+Route::get('/', [StationController::class, 'index']);
+
+Route::get('/products', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/products/{products}', [ProductController::class, 'edit'])->name('products.edit');
 Route::put('/products/{products}', [ProductController::class, 'update'])->name('products.update');
@@ -42,3 +44,7 @@ Route::delete('/orders', [OrderController::class, 'delete'])->name('orders.delet
 Route::get('/billings/{billings}', [BillingController::class, 'show'])->name('billings.initiate');
 Route::put('/billings/{billings}', [BillingController::class, 'update'])->name('billings.update');
 Route::get('/bills', [BillingController::class, 'showBills'])->name('bills.show');
+
+
+Route::get('/translator', [TranslatorController::class, 'index'])->name('translator.index');
+Route::post('/translator', [TranslatorController::class, 'translate'])->name('translator.translate');

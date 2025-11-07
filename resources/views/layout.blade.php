@@ -105,6 +105,8 @@
             /* Above navbar */
         }
     </style>
+
+    @stack('styles')
 </head>
 
 <body>
@@ -126,7 +128,7 @@
                 role="button" data-bs-toggle="dropdown" aria-expanded="false" style="white-space: nowrap;">
                 <img src="{{ asset('images/userLogo.png') }}" alt="User" class="rounded-circle" width="35"
                     height="35">
-                <span class="ms-2 ">User</span>
+                <span class="ms-2 ">{{ Auth::user()->name }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="/profile">Profile</a></li>
@@ -154,16 +156,17 @@
                 <span>Stations</span></a>
             <a class="nav-link py-2" href="{{ route('bills.show') }}"><i class="fas fa-shopping-cart me-2"></i>
                 <span>Bills</span></a>
-
+            <a class="nav-link py-2" href="{{ route('translator.index') }}"><i class="fas fa-language me-2"></i>
+                <span>Translator</span></a>
             <!-- Settings Dropdown -->
             <a class="nav-link py-2 d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
                 href="#settingsMenu" role="button" aria-expanded="false" aria-controls="settingsMenu">
-                <span><i class="fas fa-cogs me-2"></i> Settings</span>
+                <span><i class="fas fa-cogs me-2"></i> Components</span>
 
             </a>
 
             <div class="collapse ms-4" id="settingsMenu">
-                <a class="nav-link py-1" href="/profile"><i class="fas fa-user-cog me-2"></i>Profile Settings</a>
+                <a class="nav-link py-1" href="..}"><i class="fas fa-user-cog me-2"></i>Update Stations</a>
                 <a class="nav-link py-1" href="/user-management"><i class="fas fa-users-cog me-2"></i>User
                     Management</a>
                 <a class="nav-link py-1" href="/roles"><i class="fas fa-user-shield me-2"></i>Roles</a>
@@ -185,7 +188,7 @@
             sidebar.classList.toggle('collapsed');
         });
     </script>
-
+    @stack('scripts')
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('content')
+@push('styles')
     <style>
         .table-card {
             cursor: pointer;
@@ -21,8 +21,9 @@
             font-size: 0.9rem;
         }
     </style>
+@endpush
 
-
+@section('content')
     <div class="container mt-3">
         <h2 class="mb-4 text-center">Cafe Tables</h2>
         <div class="row g-4">

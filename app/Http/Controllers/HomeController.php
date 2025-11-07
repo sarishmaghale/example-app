@@ -11,13 +11,5 @@ class HomeController extends Controller
 {
        //
 
-       public function show()
-       {
-              if (Auth::check()) {
-                     $products = Product::all();
-
-                     return view('display-products', compact('products'));
-              }
-              return redirect()->route('LogInForm');
-       }
+       public function show() {}
 }
