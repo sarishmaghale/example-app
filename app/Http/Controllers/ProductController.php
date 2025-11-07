@@ -11,11 +11,8 @@ class ProductController extends Controller
     public function show()
     {
 
-        if (Auth::check()) {
-            $products = Product::all();
-            return view('display-products', compact('products'));
-        }
-        return view('login');
+        $products = Product::all();
+        return view('display-products', compact('products'));
     }
     public function store(Request $request)
     {

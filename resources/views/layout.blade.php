@@ -13,6 +13,12 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
+        .no-spin::-webkit-outer-spin-button,
+        .no-spin::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         /* Top Navbar */
         .navbar {
             position: fixed;
@@ -160,13 +166,14 @@
                 <span>Translator</span></a>
             <!-- Settings Dropdown -->
             <a class="nav-link py-2 d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-                href="#settingsMenu" role="button" aria-expanded="false" aria-controls="settingsMenu">
+                href="#componentsMenu" role="button" aria-expanded="false" aria-controls="componentsMenu">
                 <span><i class="fas fa-cogs me-2"></i> Components</span>
 
             </a>
 
-            <div class="collapse ms-4" id="settingsMenu">
-                <a class="nav-link py-1" href="..}"><i class="fas fa-user-cog me-2"></i>Update Stations</a>
+            <div class="collapse ms-4" id="componentsMenu">
+                <a class="nav-link py-1" href="{{ route('stations.add') }}"><i class="fas fa-user-cog me-2"></i>Update
+                    Stations</a>
                 <a class="nav-link py-1" href="/user-management"><i class="fas fa-users-cog me-2"></i>User
                     Management</a>
                 <a class="nav-link py-1" href="/roles"><i class="fas fa-user-shield me-2"></i>Roles</a>

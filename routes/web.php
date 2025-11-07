@@ -11,7 +11,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\TranslatorController;
-
+use Spatie\Permission\Models\Role;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,28 +23,38 @@ use App\Http\Controllers\TranslatorController;
 |
 */
 
-
-Route::get('/', [StationController::class, 'index']);
-
-Route::get('/products', [ProductController::class, 'show'])->name('products.show');
-Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-Route::get('/products/{products}', [ProductController::class, 'edit'])->name('products.edit');
-Route::put('/products/{products}', [ProductController::class, 'update'])->name('products.update');
-
 Route::get('/user', [UserController::class, 'showLogInPage'])->name('LogInForm');
 Route::post('/LogInAttempt', [UserController::class, 'userLogin'])->name('LogInSubmit');
 Route::post('/logout', [UserController::class, 'userLogOut'])->name('logout');
 
-Route::get('/stations', [StationController::class, 'index'])->name('stations.index');
-Route::get('/stations/{station}', [StationController::class, 'show'])->name('stations.show');
 
-Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-Route::delete('/orders', [OrderController::class, 'delete'])->name('orders.delete');
+Route::middleware(['auth'])->group(function () {
 
-Route::get('/billings/{billings}', [BillingController::class, 'show'])->name('billings.initiate');
-Route::put('/billings/{billings}', [BillingController::class, 'update'])->name('billings.update');
-Route::get('/bills', [BillingController::class, 'showBills'])->name('bills.show');
+    Route::get('/', [HomeController::class, 'index']);
+
+    Route::get('/products', [ProductController::class, 'show'])->name('products.show');
+    Route::post('/products', [ProductController::class, 'store'])
+        ->name('products.store')->middleware(('role:admin'));
+    Route::get('/products/{products}', [ProductController::class, 'edit'])
+        ->name('products.edit')->middleware(('role:admin'));
+    Route::put('/products/{products}', [ProductController::class, 'update'])
+        ->name('products.update')->middleware(('role:admin'));
+
+    Route::get('/stations', [StationController::class, 'index'])->name('stations.index');
+    Route::get('/stations/{station}', [StationController::class, 'show'])->name('stations.show');
+    Route::get('/addStations', [StationController::class, 'addNewStation'])
+        ->name('stations.add')->middleware(('role:admin'));
+    Route::post('/stations', [StationController::class, 'store'])
+        ->name('stations.store')->middleware(('role:admin'));
+
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::delete('/orders', [OrderController::class, 'delete'])->name('orders.delete');
+
+    Route::get('/billings/{billings}', [BillingController::class, 'show'])->name('billings.initiate');
+    Route::put('/billings/{billings}', [BillingController::class, 'update'])->name('billings.update');
+    Route::get('/bills', [BillingController::class, 'showBills'])->name('bills.show');
 
 
-Route::get('/translator', [TranslatorController::class, 'index'])->name('translator.index');
-Route::post('/translator', [TranslatorController::class, 'translate'])->name('translator.translate');
+    Route::get('/translator', [TranslatorController::class, 'index'])->name('translator.index');
+    Route::post('/translator', [TranslatorController::class, 'translate'])->name('translator.translate');
+});

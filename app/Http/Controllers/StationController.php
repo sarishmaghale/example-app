@@ -14,12 +14,9 @@ class StationController extends Controller
 
     public function index()
     {
-        if (Auth::check()) {
-            $stations = Station::all();
-            return view('display-stations', compact('stations'));
-        } else {
-            return view('login');
-        }
+
+        $stations = Station::all();
+        return view('display-stations', compact('stations'));
     }
 
     //display the orders of station
@@ -38,5 +35,23 @@ class StationController extends Controller
         }
         //if station empty, returning empty values
         return view('station-info', compact('stationInfo', 'products', 'billings', 'orders'));
+    }
+
+    public function addNewStation()
+    {
+
+        $stations = Station::all();
+        return view('add-station', compact('stations'));
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+        ]);
+        Station::create([
+            'station_name' => $request->name,
+            'status' => 0,
+        ]);
+        return redirect()->route('stations.index');
     }
 }
