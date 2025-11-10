@@ -8,48 +8,37 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Station;
 use Illuminate\Http\Request;
+use App\Service\OrderService;
+use App\Services\BillingService;
 
 class BillingController extends Controller
 {
 
-    public function getOrders($billId)
+    protected $billingService;
+    public function __construct(BillingService $billingService)
     {
-        $orders = Order::with('product')->where('billing_id', $billId)->get();
-        return $orders;
+        $this->billingService = $billingService;
     }
     public function show(Billing $billings)
     {
-        $billId = $billings->id;
-        $orders = $this->getOrders($billings->id);
-        $billings->total = calculateTotalAmount($orders);
-
-        return view('initiate-billing', compact('billings', 'orders'));
+        $billings = $this->billingService->getBillingDetails($billings);
+        return view(
+            'initiate-billing',
+            compact('billings')
+        );
     }
 
     public function update(Request $request, Billing $billings)
     {
-        $latestBillNo = Billing::whereNotNull('bill_num')->max('bill_num') ?? 0;
-        $billings->update([
-            'status' => 1,
-            'customer_name' => $request->customer_name,
-            'total' => $request->total,
-            'bill_num' => $latestBillNo + 1,
-        ]);
-
-
-        $billings->station->update(['status' => 0]);
+        $data = $request->only(['customer_name', 'total']);
+        $this->billingService->updateBillAfterCheckOut($data, $billings);
         return redirect()->route('stations.index');
     }
 
     public function showBills(Request $request)
     {
-        if (is_null($request->searchDate)) {
-
-            $date = getTodayDate();
-        } else {
-            $date = $request->searchDate;
-        }
-        $bills = Billing::where('status', 1)->whereDate('created_at', $date)->orderBy('bill_num', 'desc')->get();
+        $date = $request->searchDate;
+        $bills = $this->billingService->searchBillsByDate($date);
         return view('show-bills', compact('bills'));
     }
 }

@@ -3,15 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    protected $productService;
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
     public function show()
     {
 
-        $products = Product::all();
+        $products = $this->productService->fetchAllProducts();
         return view('display-products', compact('products'));
     }
     public function store(Request $request)
@@ -20,7 +26,7 @@ class ProductController extends Controller
             'product_name' => 'required',
             'product_price' => 'required'
         ]);
-        Product::create($products);
+        $this->productService->addNewProduct($products);
         return redirect('/display-products');
     }
 
@@ -31,11 +37,11 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $products)
     {
-        $request->validate([
+        $validated = $request->validate([
             'product_name' => 'required',
             'product_price' => 'required',
         ]);
-        $products->update($request->all());
+        $this->productService->updateProductInfo($products, $validated);
         return redirect()->route('products.show');
     }
 }

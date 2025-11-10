@@ -5,42 +5,41 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Station;
 use App\Helpers\Utility;
+use App\Services\StationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class StationController extends Controller
 {
-    //
+    protected $stationService;
+    public function __construct(StationService $stationService)
+    {
+        $this->stationService = $stationService;
+    }
 
     public function index()
     {
 
-        $stations = Station::all();
+        $stations = $this->stationService->fetchAllStations();
         return view('display-stations', compact('stations'));
     }
 
     //display the orders of station
     public function show(Station $station)
     {
-        $products = Product::all();
-        $stationInfo = Station::findOrFail($station->id);
-        $billings = null;
-        $orders = collect();
-        if ($stationInfo->status == 1) { //if station occupied
-            $billings = $stationInfo->bills()->latest()->first();
-            if ($billings) {
-                $orders = $billings->orders()->get();
-                $stationInfo->total_amount = calculateTotalAmount($orders);
-            }
-        }
-        //if station empty, returning empty values
-        return view('station-info', compact('stationInfo', 'products', 'billings', 'orders'));
+        $result = $this->stationService->getStationDetails($station);
+        return view('station-info', [
+            'stationInfo' => $result['station'],
+            'products' => $result['products'],
+            'billings' => $result['billings'],
+            'orders' => $result['orders'],
+        ]);
     }
 
     public function addNewStation()
     {
 
-        $stations = Station::all();
+        $stations = $this->stationService->fetchAllStations();
         return view('add-station', compact('stations'));
     }
     public function store(Request $request)
@@ -48,10 +47,11 @@ class StationController extends Controller
         $request->validate([
             'name' => 'required',
         ]);
-        Station::create([
+        $stationData = [
             'station_name' => $request->name,
             'status' => 0,
-        ]);
+        ];
+        $this->stationService->createNewStation($stationData);
         return redirect()->route('stations.index');
     }
 }
