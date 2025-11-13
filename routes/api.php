@@ -32,7 +32,7 @@ Route::post('orders', [OrderApiController::class, 'store']);
 Route::get('orders/{id}', [OrderApiController::class, 'show']);
 Route::delete('orders/{id}', [OrderApiController::class, 'destroy']);
 
-Route::get('bills/{date}', [BillingApiController::class, 'show']);
+Route::get('bills', [BillingApiController::class, 'show']);
 Route::put('bills/{id}', [BillingApiController::class, 'update']);
 
 Route::get('stations', [StationApiController::class, 'index']);

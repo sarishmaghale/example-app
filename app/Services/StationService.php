@@ -10,21 +10,21 @@ use App\Repositories\Interfaces\StationInterface;
 class StationService
 {
     public function __construct(
-       protected StationInterface $stationRepo,
-       protected BillingInterface $billingRepo,
-       protected OrderInterface $orderRepo,
-       protected ProductInterface $productRepo) 
-    { }
+        protected StationInterface $stationRepo,
+        protected BillingInterface $billingRepo,
+        protected OrderInterface $orderRepo,
+        protected ProductInterface $productRepo
+    ) {}
 
     public function fetchAllStations()
     {
         return $this->stationRepo->getAllStations();
     }
 
-    public function getStationDetails($stationModel)
+    public function getStationDetails($id)
     {
         $products = $this->productRepo->getAllProducts();
-        $stationInfo = $this->stationRepo->getStationData($stationModel->id);
+        $stationInfo = $this->stationRepo->getStationData($id);
         $bills = null;
         $orders = collect();
         if ($stationInfo->status == 1) {
@@ -41,7 +41,7 @@ class StationService
             'orders' => $orders,
         ];
     }
-    
+
     public function createNewStation($data)
     {
         return $this->stationRepo->createNewStation($data);

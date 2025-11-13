@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\DeleteOrderRequest;
-use App\Http\Requests\StoreOrderRequest;
-use App\Services\OrderService;
 use Illuminate\Http\Request;
+use App\Services\OrderService;
+use App\Traits\ApiResponseTrait;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\DeleteOrderRequest;
 
 class OrderApiController extends Controller
 {
+    use ApiResponseTrait;
+
     public function __construct(protected OrderService $orderService) {}
+
     public function index()
     {
         //
@@ -21,7 +25,7 @@ class OrderApiController extends Controller
         $data = $request->validated();
         $ordersOfStation = $this->orderService->addOrdersToStation($data);
         if ($ordersOfStation) {
-            return $this->successReponse($ordersOfStation, "Order added successfully");
+            return $this->successResponse($ordersOfStation, "Order added successfully");
         }
         return $this->errorResponse("failed to add");
     }
@@ -30,7 +34,7 @@ class OrderApiController extends Controller
     {
         $order = $this->orderService->fetchOrderById($id);
         if ($order) {
-            return $this->successReponse($order, "Order displayed successfully");
+            return $this->successResponse($order, "Order displayed successfully");
         }
         return $this->errorResponse();
     }

@@ -22,37 +22,39 @@ class OrderService
     {
         $stationDetails = $this->stationRepo->getStationData($data['station_id']);
         $productDetails = $this->productRepo->getProductById($data['product_id']);
-
-        DB::beginTransaction();
-        try {
-            //check if station is occupied, 0=available | 1=occupied
-            if ($stationDetails->status == 0) {
-                $billData = [
-                    'station_id' => $stationDetails->id,
+        $result = DB::transaction(function () use ($stationDetails, $productDetails, $data) {
+            $generatedBill = ($stationDetails->status == 0)
+                ? $this->billingRepo->createNewBill([
+                    'stationId' => $stationDetails->id,
                     'total' => 0,
                     'customer_name' => '',
-                ];
-                $generatedBill = $this->billingRepo->createNewBill($billData);
-                // update station status to occupied
+                ])
+                : $this->billingRepo->getBillByStation($stationDetails);
+            if ($stationDetails->status == 0) {
                 $this->stationRepo->updateStationInfo($stationDetails, ['status' => 1]);
-            } else {
-                // get existing data for the station
-                $generatedBill = $this->billingRepo->getBillByStation($stationDetails);
             }
-            $orderData = [
+            $sum = $data['quantity'] * $productDetails->product_price;
+            $orders = [
                 'quantity' => $data['quantity'],
                 'billing_id' => $generatedBill->id,
                 'product_id' => $data['product_id'],
-                'sum' => $data['quantity'] * $productDetails->product_price,
+                'sum' => $sum
             ];
-            $this->orderRepo->addOrder($orderData);
-            DB::commit();
-
-            return $stationDetails;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+            $updatedOrder = $this->orderRepo->addOrder($orders);
+            return [
+                'order_id' => $updatedOrder->id,
+                'station_id' => $stationDetails->id,
+                'station_name' => $stationDetails->station_name,
+                'billing_id' => $generatedBill->id,
+                'billing_status' => 0,
+                'product_id' => $productDetails->id,
+                'product_name' => $productDetails->product_name,
+                'product_price' => $productDetails->product_price,
+                'quantity' => $data['quantity'],
+                'sum' => $sum,
+            ];
+        });
+        return $result;
     }
 
     public function removeOrderFromStation($data)

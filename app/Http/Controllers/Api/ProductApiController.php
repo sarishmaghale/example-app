@@ -8,9 +8,11 @@ use App\Services\ProductService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Traits\ApiResponseTrait;
 
 class ProductApiController extends Controller
 {
+    use ApiResponseTrait;
     public function __construct(protected ProductService $productService) {}
 
     public function index()
@@ -46,7 +48,7 @@ class ProductApiController extends Controller
         $product = $request->validated();
         $result = $this->productService->updateProductInfo($id, $product);
         if ($result) {
-            return $this->successResponse("Product upated successfully", $product);
+            return $this->successResponse($product, "Product upated successfully");
         }
         return $this->errorResponse();
     }

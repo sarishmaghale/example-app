@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
 use App\Http\Requests\LogInRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class UserApiController extends Controller
 {
+    use ApiResponseTrait;
 
     public function login(LogInRequest $request)
     {
@@ -23,27 +24,9 @@ class UserApiController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function logout(Request $request)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $request->user()->currentAccessToken()->delete();
+        return response()->json();
     }
 }

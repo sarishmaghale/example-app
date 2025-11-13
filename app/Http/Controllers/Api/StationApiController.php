@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Http\Request;
+use App\Services\StationService;
+use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStationRequest;
-use App\Services\StationService;
-use Illuminate\Http\Request;
+use App\Http\Resources\StationOrderResource;
 
 class StationApiController extends Controller
 {
+    use ApiResponseTrait;
+
     public function __construct(protected StationService $stationService) {}
+
     public function index()
     {
         $allStations = $this->stationService->fetchAllStations();
@@ -26,7 +31,8 @@ class StationApiController extends Controller
     public function show(int $id)
     {
         $stationData = $this->stationService->getStationDetails($id);
-        return response()->json($stationData);
+        $filterRequiredData = new StationOrderResource($stationData);
+        return response()->json($filterRequiredData);
     }
 
     public function update(Request $request, string $id)

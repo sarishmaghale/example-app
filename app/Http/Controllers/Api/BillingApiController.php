@@ -11,12 +11,13 @@ use App\Traits\ApiResponseTrait;
 
 class BillingApiController extends Controller
 {
+    use ApiResponseTrait;
+
     public function __construct(protected BillingService $billingService) {}
 
-    public function show(SearchBillsRequest $request)
+    public function show(Request $request)
     {
-        $date = $request->validated();
-        $bills = $this->billingService->searchBillsByDate($date);
+        $bills = $this->billingService->searchBillsByDate($request->searchDate);
         if ($bills !== null) {
             return $this->successResponse($bills, "Bills displayed successfully");
         }
@@ -28,7 +29,7 @@ class BillingApiController extends Controller
         $data = $request->validated();
         $result = $this->billingService->updateBillAfterCheckOut($data, $id);
         if ($result) {
-            return $this->successResponse("Successfully updated", $data);
+            return $this->successResponse("Bill successfully updated to paid", $data);
         }
         return $this->errorResponse("Failed to update");
     }

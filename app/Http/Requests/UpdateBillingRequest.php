@@ -24,7 +24,6 @@ class UpdateBillingRequest extends FormRequest
         return [
             'customer_name' => 'required|string',
             'total' => 'required|numeric|min:0',
-            'id' => 'required|integer|exists:billings,id',
         ];
     }
 }
