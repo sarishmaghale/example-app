@@ -35,13 +35,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/products', [ProductController::class, 'show'])->name('products.show');
     Route::post('/products', [ProductController::class, 'store'])
         ->name('products.store')->middleware(('role:admin'));
-    Route::get('/products/{products}', [ProductController::class, 'edit'])
+    Route::get('/products/{id}', [ProductController::class, 'edit'])
         ->name('products.edit')->middleware(('role:admin'));
-    Route::put('/products/{products}', [ProductController::class, 'update'])
+    Route::put('/products/{id}', [ProductController::class, 'update'])
         ->name('products.update')->middleware(('role:admin'));
 
     Route::get('/stations', [StationController::class, 'index'])->name('stations.index');
-    Route::get('/stations/{station}', [StationController::class, 'show'])->name('stations.show');
+    Route::get('/stations/{id}', [StationController::class, 'show'])->name('stations.show');
     Route::get('/addStations', [StationController::class, 'addNewStation'])
         ->name('stations.add')->middleware(('role:admin'));
     Route::post('/stations', [StationController::class, 'store'])
@@ -50,10 +50,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::delete('/orders', [OrderController::class, 'delete'])->name('orders.delete');
 
-    Route::get('/billings/{billings}', [BillingController::class, 'show'])->name('billings.initiate');
-    Route::put('/billings/{billings}', [BillingController::class, 'update'])->name('billings.update');
+    Route::get('/billings/{id}', [BillingController::class, 'show'])->name('billings.initiate');
+    Route::put('/billings/{id}', [BillingController::class, 'update'])->name('billings.update');
     Route::get('/bills', [BillingController::class, 'showBills'])->name('bills.show');
-
 
     Route::get('/translator', [TranslatorController::class, 'index'])->name('translator.index');
     Route::post('/translator', [TranslatorController::class, 'translate'])->name('translator.translate');

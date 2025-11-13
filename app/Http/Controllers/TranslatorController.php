@@ -2,40 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TranslationRequest;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class TranslatorController extends Controller
 {
-    protected $translationService;
-    public function __construct(TranslationService $translationService)
-    {
-        $this->translationService = $translationService;
-    }
+    public function __construct(protected TranslationService $translationService) {}
 
     public function index()
     {
         return view('open-translator');
     }
 
-    public function translate(Request $request)
+    public function translate(TranslationRequest $request)
     {
-        // Validate input
-        $validated = $request->validate([
-            'text' => 'required|string',
-            'to' => 'required|string',
-            'from' => 'nullable|string',
-        ]);
+        $validated = $request->validatedData();
+        $translatedText = $this->translationService->translateText($validated);
 
-        // Call the service
-        $translatedText = $this->translationService->translateText(
-            $validated['text'],
-            $validated['to'],
-            $validated['from'] ?? 'auto'
-        );
-
-        // Return JSON response
         return response()->json(['translatedText' => $translatedText]);
     }
 }

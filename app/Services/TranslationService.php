@@ -2,16 +2,15 @@
 
 namespace App\Services;
 
-
-
 class TranslationService
 {
 
-    public function translateText(string $text, string $to, string $from = 'auto'): string
+    public function translateText(array $data): string
     {
-        $text = urlencode($text);
+        $text = urlencode($data['text']);
+        $to = $data['to'];
+        $from = $data['from'] ?? 'auto';
         $url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl={$from}&tl={$to}&dt=t&q={$text}";
-
         try {
             $response = file_get_contents($url);
             $decoded = json_decode($response, true);

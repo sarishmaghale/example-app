@@ -15,7 +15,7 @@
                 <div class="col-md-8">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Edit Product</h5>
-                        <form action="{{ route('products.update', $products) }}" method="POST"
+                        <form action="{{ route('products.update', $products->id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -34,6 +34,7 @@
                                     value="{{ $products->product_price }}" required
                                     style="-moz-appearance:textfield; -webkit-appearance:none; margin:0;">
                             </div>
+                            <input type="hidden" class="form-control" name="id" value="{{ $products->id }}">
 
                             <!-- Product Image Upload -->
                             <div class="mb-3">

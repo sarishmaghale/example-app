@@ -10,34 +10,30 @@ use App\Repositories\Interfaces\StationInterface;
 
 class BillingService
 {
-    protected $billingRepo;
-    protected $stationRepo;
-    protected $orderRepo;
     public function __construct(
-        BillingInterface $billingRepo,
-        StationInterface $stationRepo,
-        OrderInterface $orderRepo,
-    ) {
-        $this->billingRepo = $billingRepo;
-        $this->stationRepo = $stationRepo;
-        $this->orderRepo = $orderRepo;
-    }
-    public function updateBillAfterCheckOut($data, $bill)
+        protected BillingInterface $billingRepo,
+        protected StationInterface $stationRepo,
+        protected OrderInterface $orderRepo
+    ) {}
+
+    public function updateBillAfterCheckOut($data, $id)
     {
         $billNum = $this->billingRepo->getLatestBillNum();
         DB::beginTransaction();
         try {
-            $updateData = array_merge($data, [
+            $newBillData = array_merge($data, [
                 'status' => 1,
                 'bill_num' => $billNum + 1,
             ]);
-            $this->billingRepo->updateBills($bill, $updateData);
+            $bills = $this->billingRepo->getBillByBillId($id);
+            $this->billingRepo->updateBills($bills, $newBillData);
             $this->stationRepo->updateStationInfo(
-                $bill->station,
+                $bills->station,
                 ['status' => 0]
             );
+
             DB::commit();
-            return $bill->bill_num;
+            return $bills->bill_num;
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -51,10 +47,34 @@ class BillingService
         }
         return $this->billingRepo->getBillsByDate($date);
     }
-    public function getBillingDetails($billing)
+
+    public function getBillingDetails($id)
     {
-        $billing->orders = $this->orderRepo->getOrdersByBillingId($billing->id);
-        $billing->total = calculateTotalAmount($billing->orders);
-        return $billing;
+        $billModel = $this->billingRepo->getBillByBillId($id);
+        $billModel->orders = $this->orderRepo->getOrdersByBillingId($id);
+        $billModel->total = calculateTotalAmount($billModel->orders);
+        return $billModel;
+    }
+
+    public function fetchListOfSalesForChart($date)
+    {
+        $currentDay = date('d', strtotime($date));
+        $days = [];
+        $totals = [];
+        for ($i = 1; $i <= $currentDay; $i++) {
+            $days[$i] = $i;
+            $totals[$i] = 0;
+        }
+        $perDaySales = $this->billingRepo->getSalesOfCurrentMonth($date);
+        $grouped = $perDaySales->groupBy(function ($sale) {
+            return $sale->updated_at->day;
+        });
+        foreach ($grouped as $day => $billings) {
+            $totals[$day] = $billings->sum('total');
+        }
+        return [
+            'days' => array_values($days),
+            'totals' => array_values($totals),
+        ];
     }
 }

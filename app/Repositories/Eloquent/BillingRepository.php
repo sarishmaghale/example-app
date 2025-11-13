@@ -41,4 +41,16 @@ class BillingRepository implements BillingInterface
     {
         return $station->bills()->latest()->first();
     }
+
+    public function getSalesOfCurrentMonth(string $date): Collection
+    {
+        $currentYear = date('Y', strtotime($date));
+        $currentMonth = date('m', strtotime($date));
+        $currentDay = date('d', strtotime($date));
+        return  Billing::whereMonth('updated_at', $currentMonth)
+            ->whereYear('updated_at', $currentYear)
+            ->where('status', '1')
+            ->whereDay('updated_at', '<=', $currentDay)
+            ->get();
+    }
 }

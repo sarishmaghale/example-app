@@ -11,59 +11,60 @@ use App\Repositories\Interfaces\StationInterface;
 
 class OrderService
 {
+    public function __construct(
+        protected OrderInterface $orderRepo,
+        protected StationInterface $stationRepo,
+        protected ProductInterface $productRepo,
+        protected BillingInterface $billingRepo,
+    ) {}
 
-    protected $stationRepo;
-    protected $orderRepo;
-    protected $productRepo;
-    protected $billingRepo;
-
-    public function __construct(OrderInterface $orderRepo, StationInterface $stationRepo, ProductInterface $productRepo, BillingInterface $billingRepo,)
-    {
-        $this->orderRepo = $orderRepo;
-        $this->stationRepo = $stationRepo;
-        $this->productRepo = $productRepo;
-        $this->billingRepo = $billingRepo;
-    }
     public function addOrdersToStation(array $data)
     {
-        $station = $this->stationRepo->getStationData($data['station_id']);
-        $product = $this->productRepo->getProductById($data['product_id']);
+        $stationDetails = $this->stationRepo->getStationData($data['station_id']);
+        $productDetails = $this->productRepo->getProductById($data['product_id']);
 
         DB::beginTransaction();
         try {
             //check if station is occupied, 0=available | 1=occupied
-            if ($station->status == 0) {
+            if ($stationDetails->status == 0) {
                 $billData = [
-                    'station_id' => $station->id,
+                    'station_id' => $stationDetails->id,
                     'total' => 0,
                     'customer_name' => '',
                 ];
-                $bill = $this->billingRepo->createNewBill($billData);
+                $generatedBill = $this->billingRepo->createNewBill($billData);
                 // update station status to occupied
-                $this->stationRepo->updateStationInfo($station, ['status' => 1]);
+                $this->stationRepo->updateStationInfo($stationDetails, ['status' => 1]);
             } else {
                 // get existing data for the station
-                $bill = $this->billingRepo->getBillByStation($station);
+                $generatedBill = $this->billingRepo->getBillByStation($stationDetails);
             }
             $orderData = [
                 'quantity' => $data['quantity'],
-                'billing_id' => $bill->id,
+                'billing_id' => $generatedBill->id,
                 'product_id' => $data['product_id'],
-                'sum' => $data['quantity'] * $product->product_price,
+                'sum' => $data['quantity'] * $productDetails->product_price,
             ];
             $this->orderRepo->addOrder($orderData);
             DB::commit();
-            return $station;
+
+            return $stationDetails;
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
         }
     }
+
     public function removeOrderFromStation($data)
     {
-        $station = $this->stationRepo->getStationData($data['station_id']);
-        $order = $this->orderRepo->getOrderByOrderId(($data['order_id']));
-        $this->orderRepo->deleteOrder($order);
-        return $station;
+        $stationDetails = $this->stationRepo->getStationData($data['station_id']);
+        $orderDetails = $this->orderRepo->getOrderByOrderId(($data['order_id']));
+        $this->orderRepo->deleteOrder($orderDetails);
+        return $stationDetails;
+    }
+
+    public function fetchOrderById(int $id)
+    {
+        return $this->orderRepo->getOrderByOrderId($id);
     }
 }

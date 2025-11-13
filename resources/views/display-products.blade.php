@@ -59,7 +59,7 @@
                             <td>{{ $product->product_name }}</td>
                             <td>Rs. {{ $product->product_price }}</td>
                             {{-- trigger edit for target product --}}
-                            <form action="{{ route('products.edit', $product) }}" method="Get">
+                            <form action="{{ route('products.edit', $product->id) }}" method="Get">
                                 @csrf
                                 <td><button class="btn btn-secondary">Edit</button></td>
                             </form>

@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LogInRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    //
     public function showLogInPage()
     {
         return view('login');
     }
-    public function userLogin(Request $request)
+
+    public function userLogin(LogInRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
+        $credentials = $request->validated();
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->route('stations.index');

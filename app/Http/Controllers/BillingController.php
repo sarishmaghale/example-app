@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Utility;
+use App\Http\Requests\UpdateBillingRequest;
 use App\Models\Billing;
 use App\Models\Order;
 use App\Models\Product;
@@ -14,24 +15,21 @@ use App\Services\BillingService;
 class BillingController extends Controller
 {
 
-    protected $billingService;
-    public function __construct(BillingService $billingService)
+    public function __construct(protected BillingService $billingService) {}
+
+    public function show(int $id)
     {
-        $this->billingService = $billingService;
-    }
-    public function show(Billing $billings)
-    {
-        $billings = $this->billingService->getBillingDetails($billings);
+        $billings = $this->billingService->getBillingDetails($id);
         return view(
             'initiate-billing',
             compact('billings')
         );
     }
 
-    public function update(Request $request, Billing $billings)
+    public function update(UpdateBillingRequest $request, int $id)
     {
-        $data = $request->only(['customer_name', 'total']);
-        $this->billingService->updateBillAfterCheckOut($data, $billings);
+        $data = $request->validated();
+        $this->billingService->updateBillAfterCheckOut($data, $id);
         return redirect()->route('stations.index');
     }
 

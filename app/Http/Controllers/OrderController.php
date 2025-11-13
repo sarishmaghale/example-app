@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteOrderRequest;
+use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
 use App\Models\Billing;
 use App\Models\Product;
@@ -11,32 +13,19 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    protected $orderService;
-    public function __construct(OrderService $orderService)
+    public function __construct(protected OrderService $orderService) {}
+
+    public function store(StoreOrderRequest $request)
     {
-        $this->orderService = $orderService;
-    }
-    public function store(Request $request)
-    {
-        $data = [
-            'station_id' => $request->station_id,
-            'product_id' => $request->product_id,
-            'quantity' => $request->quantity,
-        ];
+        $data = $request->validated();
         $stationInfo = $this->orderService->addOrdersToStation($data);
         return redirect()->route('stations.show', ['station' => $stationInfo]);
     }
 
     //remove item from Orders
-    public function delete(Request $request)
+    public function delete(DeleteOrderRequest $request)
     {
-        $request->validate([
-            'id',
-        ]);
-        $data = [
-            'station_id' => $request->station_id,
-            'order_id' => $request->id,
-        ];
+        $data = $request->validatedData();
         $stationInfo = $this->orderService->removeOrderFromStation($data);
         return redirect()->route('stations.show', ['station' => $stationInfo]);
     }

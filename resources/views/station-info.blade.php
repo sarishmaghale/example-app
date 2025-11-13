@@ -88,7 +88,7 @@
         <!-- Checkout Button -->
         @if ($orders->isNotEmpty())
             <div class="d-flex justify-content-end mt-3">
-                <form action="{{ route('billings.initiate', $billings) }}" method="GET">
+                <form action="{{ route('billings.initiate', $billings->id) }}" method="GET">
                     @csrf
                     <button type="submit" class="btn btn-success btn-lg">Checkout</button>
                 </form>

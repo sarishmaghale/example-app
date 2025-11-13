@@ -32,7 +32,7 @@
                 <!-- Table Cards -->
                 <div class="col-md-3 col-sm-6">
                     <div class="card text-center table-card">
-                        <a href="{{ route('stations.show', $station) }}" style="text-decoration: none; color:inherit;s">
+                        <a href="{{ route('stations.show', $station->id) }}" style="text-decoration: none; color:inherit;s">
 
                             <div class="card-body">
                                 <div class="table-number">{{ $station->station_name }}</div>

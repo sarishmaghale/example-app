@@ -1,10 +1,8 @@
 <?php
 
 use Carbon\Carbon;
-use App\Models\Billing;
 use App\Models\Product;
 use App\Models\Station;
-
 
 if (!function_exists('getTodayDate')) {
     function getTodayDate()
@@ -37,7 +35,6 @@ if (!function_exists('getLanguages')) {
             ['code' => 'ja', 'name' => 'Japanese'],
             ['code' => 'ko', 'name' => 'Korean'],
             ['code' => 'zh-CN', 'name' => 'Chinese (Simplified)'],
-            ['code' => 'zh-TW', 'name' => 'Chinese (Traditional)'],
             ['code' => 'ar', 'name' => 'Arabic'],
             ['code' => 'hi', 'name' => 'Hindi'],
             ['code' => 'bn', 'name' => 'Bengali'],
@@ -76,19 +73,15 @@ if (!function_exists('getTotalStations')) {
 if (!function_exists('getDailySales')) {
     function getDailySales($date)
     {
-        // Static cache array
         static $cache = [];
-
         // If we already fetched sales for this date, return cached value
         if (isset($cache[$date])) {
             return $cache[$date];
         }
-
         // Otherwise, query the database
         $totalSales = \App\Models\Billing::whereDate('updated_at', $date)
             ->where('status', 1)
             ->sum('total');
-
         // Store result in cache for this request
         $cache[$date] = $totalSales;
 

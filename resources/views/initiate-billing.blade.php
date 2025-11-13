@@ -61,7 +61,7 @@
                                         <h5 class="mb-0">Customer Details</h5>
                                     </div>
                                     <div class="card-body p-4">
-                                        <form action="{{ route('billings.update', $billings) }}" method="POST">
+                                        <form action="{{ route('billings.update', $billings->id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="mb-3">

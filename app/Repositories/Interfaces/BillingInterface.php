@@ -15,4 +15,5 @@ interface BillingInterface
     public function getLatestBillNum();
     public function getBillsByDate(string $date);
     public function getBillByStation(Station $station);
+    public function getSalesOfCurrentMonth(string $date);
 }

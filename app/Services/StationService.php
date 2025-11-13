@@ -7,33 +7,24 @@ use App\Repositories\Interfaces\OrderInterface;
 use App\Repositories\Interfaces\ProductInterface;
 use App\Repositories\Interfaces\StationInterface;
 
-
 class StationService
 {
-    protected $stationRepo;
-    protected $billingRepo;
-    protected $orderRepo;
-    protected $productRepo;
-
     public function __construct(
-        StationInterface $stationRepo,
-        BillingInterface $billingRepo,
-        OrderInterface $orderRepo,
-        ProductInterface $productRepo,
-    ) {
-        $this->stationRepo = $stationRepo;
-        $this->billingRepo = $billingRepo;
-        $this->orderRepo = $orderRepo;
-        $this->productRepo = $productRepo;
-    }
+       protected StationInterface $stationRepo,
+       protected BillingInterface $billingRepo,
+       protected OrderInterface $orderRepo,
+       protected ProductInterface $productRepo) 
+    { }
+
     public function fetchAllStations()
     {
         return $this->stationRepo->getAllStations();
     }
-    public function getStationDetails($station)
+
+    public function getStationDetails($stationModel)
     {
         $products = $this->productRepo->getAllProducts();
-        $stationInfo = $this->stationRepo->getStationData($station->id);
+        $stationInfo = $this->stationRepo->getStationData($stationModel->id);
         $bills = null;
         $orders = collect();
         if ($stationInfo->status == 1) {
@@ -50,6 +41,7 @@ class StationService
             'orders' => $orders,
         ];
     }
+    
     public function createNewStation($data)
     {
         return $this->stationRepo->createNewStation($data);
