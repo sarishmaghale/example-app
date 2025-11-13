@@ -15,11 +15,20 @@ class BillingApiController extends Controller
 
     public function __construct(protected BillingService $billingService) {}
 
-    public function show(Request $request)
+    public function index(Request $request)
     {
         $bills = $this->billingService->searchBillsByDate($request->searchDate);
         if ($bills !== null) {
             return $this->successResponse($bills, "Bills displayed successfully");
+        }
+        return $this->errorResponse();
+    }
+
+    public function show(int $id)
+    {
+        $bill = $this->billingService->getBillingDetails($id);
+        if ($bill !== null) {
+            return $this->successResponse($bill, "Bill fetched successfully");
         }
         return $this->errorResponse();
     }
@@ -29,7 +38,7 @@ class BillingApiController extends Controller
         $data = $request->validated();
         $result = $this->billingService->updateBillAfterCheckOut($data, $id);
         if ($result) {
-            return $this->successResponse("Bill successfully updated to paid", $data);
+            return $this->successResponse($data, "Bill successfully updated to paid");
         }
         return $this->errorResponse("Failed to update");
     }

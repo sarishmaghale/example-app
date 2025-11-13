@@ -28,4 +28,8 @@ class OrderRepository implements OrderInterface
     {
         return $order->delete();;
     }
+    public function updateOrder(Order $order, array $data): bool
+    {
+        return $order->update($data);
+    }
 }

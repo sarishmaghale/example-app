@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Http\Controllers\Controller;
@@ -53,11 +52,12 @@ class ProductApiController extends Controller
         return $this->errorResponse();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function delete(int $id)
     {
-        //
+        $result = $this->productService->activateSoftDelete($id);
+        if ($result) {
+            return $this->successResponse("", "Product removed successfully");
+        }
+        return $this->errorResponse();
     }
 }

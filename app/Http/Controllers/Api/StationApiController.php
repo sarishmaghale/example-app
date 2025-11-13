@@ -35,13 +35,12 @@ class StationApiController extends Controller
         return response()->json($filterRequiredData);
     }
 
-    public function update(Request $request, string $id)
+    public function destroy(int $id)
     {
-        //
-    }
-
-    public function destroy(string $id)
-    {
-        //
+        $result = $this->stationService->activateSoftDelete($id);
+        if ($result) {
+            return $this->successResponse('', "Station deleted successfully");
+        }
+        return $this->errorResponse();
     }
 }

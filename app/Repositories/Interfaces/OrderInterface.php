@@ -12,4 +12,5 @@ interface OrderInterface
     public function addOrder(array $orders,);
     public function getOrderByOrderId(int $orderId);
     public function deleteOrder(Order $order);
+    public function updateOrder(Order $order, array $data);
 }

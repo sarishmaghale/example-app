@@ -46,4 +46,9 @@ class StationService
     {
         return $this->stationRepo->createNewStation($data);
     }
+    public function activateSoftDelete($id)
+    {
+        $station = $this->stationRepo->getStationData($id);
+        return $this->stationRepo->deleteStation($station);
+    }
 }

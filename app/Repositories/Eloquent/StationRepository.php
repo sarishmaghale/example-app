@@ -24,10 +24,11 @@ class StationRepository implements StationInterface
     }
     public function deleteStation(Station $station): bool
     {
-        return $station->delete();
+        $station->isDeleted = true;
+        return $station->save();
     }
     public function getAllStations(): Collection
     {
-        return Station::all();
+        return Station::where('isDeleted', false)->get();
     }
 }

@@ -27,4 +27,11 @@ class ProductService
     {
         return $this->productRepo->getProductById($id);
     }
+    public function activateSoftDelete(int $id)
+    {
+        $product = $this->productRepo->getProductById($id);
+        if ($product) {
+            return $this->productRepo->deleteProduct($product);
+        }
+    }
 }

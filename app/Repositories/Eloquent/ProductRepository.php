@@ -19,7 +19,8 @@ class ProductRepository implements ProductInterface
     }
     public function deleteProduct(Product $product): bool
     {
-        return $product->delete();
+        $product->isDeleted = true;
+        return $product->save();
     }
 
     public function getProductById(int $productId): Product
@@ -28,6 +29,6 @@ class ProductRepository implements ProductInterface
     }
     public function getAllProducts(): Collection
     {
-        return Product::all();
+        return Product::where('isDeleted', false)->get();
     }
 }

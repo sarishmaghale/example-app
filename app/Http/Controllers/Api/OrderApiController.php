@@ -8,17 +8,13 @@ use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\DeleteOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 
 class OrderApiController extends Controller
 {
     use ApiResponseTrait;
 
     public function __construct(protected OrderService $orderService) {}
-
-    public function index()
-    {
-        //
-    }
 
     public function store(StoreOrderRequest $request)
     {
@@ -39,18 +35,23 @@ class OrderApiController extends Controller
         return $this->errorResponse();
     }
 
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
     public function destroy(DeleteOrderRequest $request)
     {
         $data = $request->validatedData();
         $renewedOrders = $this->orderService->removeOrderFromStation($data);
-        if (true) {
+        if ($renewedOrders) {
             return $this->successResponse("Order removed successfully");
         }
         return $this->errorResponse();
+    }
+
+    public function update(UpdateOrderRequest $request, int $id)
+    {
+        $data = $request->validated();
+        $updatedOrder = $this->orderService->updateOrder($data, $id);
+        $response = $updatedOrder !== null ?
+            $this->successResponse($updatedOrder, "Order updated successfully") :
+            $this->errorResponse();
+        return $response;
     }
 }

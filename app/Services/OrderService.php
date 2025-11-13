@@ -25,7 +25,7 @@ class OrderService
         $result = DB::transaction(function () use ($stationDetails, $productDetails, $data) {
             $generatedBill = ($stationDetails->status == 0)
                 ? $this->billingRepo->createNewBill([
-                    'stationId' => $stationDetails->id,
+                    'station_id' => $stationDetails->id,
                     'total' => 0,
                     'customer_name' => '',
                 ])
@@ -68,5 +68,16 @@ class OrderService
     public function fetchOrderById(int $id)
     {
         return $this->orderRepo->getOrderByOrderId($id);
+    }
+
+    public function updateOrder(array $data, int $id)
+    {
+        $orderDetails = $this->orderRepo->getOrderByOrderId($id);
+        $products = $this->productRepo->getProductById($data['product_id']);
+        if ($products) {
+            $data['sum'] = $data['quantity'] * $products->product_price;
+            $this->orderRepo->updateOrder($orderDetails, $data);
+            return $this->orderRepo->getOrderByOrderId($id);
+        }
     }
 }
