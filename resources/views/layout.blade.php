@@ -174,8 +174,8 @@
             <div class="collapse ms-4" id="componentsMenu">
                 <a class="nav-link py-1" href="{{ route('stations.add') }}"><i class="fas fa-user-cog me-2"></i>Update
                     Stations</a>
-                <a class="nav-link py-1" href="/user-management"><i class="fas fa-users-cog me-2"></i>User
-                    Management</a>
+                <a class="nav-link py-1" href="{{ route('bills.detail') }}"><i class="fas fa-users-cog me-2"></i>Search
+                    Receipt</a>
                 <a class="nav-link py-1" href="/roles"><i class="fas fa-user-shield me-2"></i>Roles</a>
             </div>
         </nav>

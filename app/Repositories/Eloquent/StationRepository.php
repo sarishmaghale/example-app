@@ -8,8 +8,6 @@ use App\Repositories\Interfaces\StationInterface;
 
 class StationRepository implements StationInterface
 {
-
-
     public function createNewStation(array $station): Station
     {
         return Station::create($station);

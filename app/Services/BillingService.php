@@ -77,4 +77,11 @@ class BillingService
             'totals' => array_values($totals),
         ];
     }
+    public function fetchBillDetailsByReceiptNum(?int $bill_num)
+    {
+        if (is_null($bill_num)) {
+            return null;
+        }
+        return $this->billingRepo->getBillByReceiptNum($bill_num);
+    }
 }

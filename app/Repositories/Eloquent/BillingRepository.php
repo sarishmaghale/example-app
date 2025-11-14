@@ -9,7 +9,6 @@ use App\Repositories\Interfaces\BillingInterface;
 
 class BillingRepository implements BillingInterface
 {
-
     public function createNewBill(array $billing): Billing
     {
         return Billing::create($billing);
@@ -34,7 +33,7 @@ class BillingRepository implements BillingInterface
     public function getBillsByDate(string $date): Collection
     {
         return Billing::where('status', 1)
-            ->whereDate('created_at', $date)
+            ->whereDate('updated_at', $date)
             ->orderBy('bill_num', 'desc')->get();
     }
     public function getBillByStation(Station $station): ?Billing
@@ -52,5 +51,9 @@ class BillingRepository implements BillingInterface
             ->where('status', '1')
             ->whereDay('updated_at', '<=', $currentDay)
             ->get();
+    }
+    public function getBillByReceiptNum(int $bill_num): Billing
+    {
+        return Billing::where('bill_num', $bill_num)->first();
     }
 }

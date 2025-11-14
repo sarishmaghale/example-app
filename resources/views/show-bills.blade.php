@@ -26,10 +26,10 @@
             <table class="table table-bordered table-hover" id="billsTable">
                 <thead class="table-dark">
                     <tr>
-                        <th>Bill No</th>
+                        <th>Receipt Num</th>
                         <th>Total Amount</th>
                         <th>Station/Table</th>
-                        <th>Date</th>
+                        <th>Billing Date</th>
                         <th>Customer Name</th>
 
                     </tr>

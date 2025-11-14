@@ -39,4 +39,10 @@ class BillingController extends Controller
         $bills = $this->billingService->searchBillsByDate($date);
         return view('show-bills', compact('bills'));
     }
+    public function showBillDetail(Request $request)
+    {
+        $bill_num = $request->id;
+        $bill = $this->billingService->fetchBillDetailsByReceiptNum($request->id);
+        return view('details-bill', compact('bill'));
+    }
 }

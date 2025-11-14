@@ -11,6 +11,7 @@ interface BillingInterface
     public function createNewBill(array $billing);
     public function updateBills(Billing $bill, array $data);
     public function getBillByBillId(int $billId);
+    public function getBillByReceiptNum(int $bill_num);
     public function deleteBill(Billing $billing);
     public function getLatestBillNum();
     public function getBillsByDate(string $date);
