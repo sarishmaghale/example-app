@@ -18,28 +18,37 @@ class StationApiController extends Controller
     public function index()
     {
         $allStations = $this->stationService->fetchAllStations();
-        return response()->json($allStations);
+        if ($allStations) {
+            return $this->successResponse(data: $allStations, message: "All stations displayed successfully");
+        }
+        return $this->errorResponse();
     }
 
     public function store(StoreStationRequest $request)
     {
         $stationData = $request->validatedData();
         $addedStation = $this->stationService->createNewStation($stationData);
-        return response()->json($addedStation);
+        if ($addedStation) {
+            return $this->successResponse(data: $addedStation, message: "New station created successfully");
+        }
+        return $this->errorResponse();
     }
 
     public function show(int $id)
     {
         $stationData = $this->stationService->getStationDetails($id);
         $filterRequiredData = new StationOrderResource($stationData);
-        return response()->json($filterRequiredData);
+        if ($filterRequiredData) {
+            return $this->successResponse(data: $filterRequiredData, message: "Orders of station fetched successfully");
+        }
+        return $this->errorResponse();
     }
 
     public function destroy(int $id)
     {
         $result = $this->stationService->activateSoftDelete($id);
         if ($result) {
-            return $this->successResponse('', "Station deleted successfully");
+            return $this->successResponse(message: "Station deleted successfully");
         }
         return $this->errorResponse();
     }

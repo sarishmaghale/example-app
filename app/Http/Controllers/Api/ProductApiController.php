@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductApiController extends Controller
 {
@@ -18,7 +19,7 @@ class ProductApiController extends Controller
     {
         $products = $this->productService->fetchAllProducts();
         if ($products !== null) {
-            return $this->successResponse($products, "All products displayed successfully");
+            return $this->successResponse(data: $products, message: "All products displayed successfully");
         }
         return $this->errorResponse();
     }
@@ -28,16 +29,20 @@ class ProductApiController extends Controller
         $products = $request->validated();
         $result = $this->productService->addNewProduct($products);
         if ($result !== null) {
-            return $this->successResponse($result, "Product added successfully");
+            return $this->successResponse(data: $result, message: "Product added successfully");
         }
         return $this->errorResponse();
     }
 
     public function show(int $id)
     {
-        $product = $this->productService->fetchProductById($id);
-        if ($product !== null) {
-            return $this->successResponse($product, "Product displayed successfully");
+        try {
+            $product = $this->productService->fetchProductById($id);
+            if ($product !== null) {
+                return $this->successResponse(data: $product, message: "Product displayed successfully");
+            }
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse(message: 'Product not found', code: 404);
         }
         return $this->errorResponse();
     }
@@ -47,7 +52,7 @@ class ProductApiController extends Controller
         $product = $request->validated();
         $result = $this->productService->updateProductInfo($id, $product);
         if ($result) {
-            return $this->successResponse($product, "Product upated successfully");
+            return $this->successResponse(data: $result, message: "Product upated successfully");
         }
         return $this->errorResponse();
     }
@@ -56,7 +61,7 @@ class ProductApiController extends Controller
     {
         $result = $this->productService->activateSoftDelete($id);
         if ($result) {
-            return $this->successResponse("", "Product removed successfully");
+            return $this->successResponse(message: "Product removed successfully");
         }
         return $this->errorResponse();
     }

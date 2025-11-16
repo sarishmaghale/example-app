@@ -19,7 +19,7 @@ class BillingApiController extends Controller
     {
         $bills = $this->billingService->searchBillsByDate($request->searchDate);
         if ($bills !== null) {
-            return $this->successResponse($bills, "Bills displayed successfully");
+            return $this->successResponse(data: $bills, message: "Bills displayed successfully");
         }
         return $this->errorResponse();
     }
@@ -28,7 +28,7 @@ class BillingApiController extends Controller
     {
         $bill = $this->billingService->getBillingDetails($id);
         if ($bill !== null) {
-            return $this->successResponse($bill, "Bill fetched successfully");
+            return $this->successResponse(data: $bill, message: "Bill fetched successfully");
         }
         return $this->errorResponse();
     }
@@ -38,7 +38,7 @@ class BillingApiController extends Controller
         $data = $request->validated();
         $result = $this->billingService->updateBillAfterCheckOut($data, $id);
         if ($result) {
-            return $this->successResponse($data, "Bill successfully updated to paid");
+            return $this->successResponse(data: $data, message: "Bill successfully updated to paid");
         }
         return $this->errorResponse("Failed to update");
     }

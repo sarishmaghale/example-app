@@ -19,7 +19,7 @@ class OrderController extends Controller
     {
         $data = $request->validated();
         $stationInfo = $this->orderService->addOrdersToStation($data);
-        return redirect()->route('stations.show', ['station' => $stationInfo]);
+        return redirect()->route('stations.show', ['id' => $stationInfo['station_id']]);
     }
 
     //remove item from Orders
@@ -27,6 +27,6 @@ class OrderController extends Controller
     {
         $data = $request->validatedData();
         $stationInfo = $this->orderService->removeOrderFromStation($data);
-        return redirect()->route('stations.show', ['station' => $stationInfo]);
+        return redirect()->route('stations.show', ['id' => $stationInfo]);
     }
 }

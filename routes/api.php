@@ -25,22 +25,32 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('products', [ProductApiController::class, 'index']); //to fetch all the product list
 Route::post('products', [ProductApiController::class, 'store']); //to add new product
-Route::get('products/{id}', [ProductApiController::class, 'show']); //to fetch product info by id
-Route::put('products/{id}', [ProductApiController::class, 'update']); //to update product data
-Route::patch('products/{id}', [ProductApiController::class, 'delete']);
+Route::get('products/{id}', [ProductApiController::class, 'show'])
+    ->where('id', '[0-9]+'); //to fetch product info by id
+Route::put('products/{id}', [ProductApiController::class, 'update'])
+    ->where('id', '[0-9]+'); //to update product data
+Route::patch('products/{id}', [ProductApiController::class, 'delete'])
+    ->where('id', '[0-9]+');
 
 Route::post('orders', [OrderApiController::class, 'store']); //to add orders to the station/table
-Route::get('orders/{id}', [OrderApiController::class, 'show']); //to get order details by id
-Route::put('orders/{id}', [OrderApiController::class, 'update']); //update the order
-Route::delete('orders/{id}', [OrderApiController::class, 'destroy']); //to remove order from station
+Route::get('orders/{id}', [OrderApiController::class, 'show'])
+    ->where('id', '[0-9]+'); //to get order details by id
+Route::put('orders/{id}', [OrderApiController::class, 'update'])
+    ->where('id', '[0-9]+'); //update the order
+Route::delete('orders/{id}', [OrderApiController::class, 'destroy'])
+    ->where('id', '[0-9]+'); //to remove order from station
 
 Route::get('bills', [BillingApiController::class, 'index']); //fetch the paid bills of certain date
-Route::get('bills/{id}', [BillingApiController::class, 'show']); //fetch Bill by id
-Route::put('bills/{id}', [BillingApiController::class, 'update']); //update the unpaid bill status after checkout
+Route::get('bills/{id}', [BillingApiController::class, 'show'])
+    ->where('id', '[0-9]+'); //fetch Bill by id
+Route::put('bills/{id}', [BillingApiController::class, 'update'])
+    ->where('id', '[0-9]+'); //update the unpaid bill status after checkout
 
 Route::get('stations', [StationApiController::class, 'index']); //fetch all stations list
 Route::post('stations', [StationApiController::class, 'store']); //add new station
-Route::get('stations/{id}', [StationApiController::class, 'show']); //get the details of station- if occupied:get the order list
-Route::patch('stations/{id}', [StationApiController::class, 'destroy']);
+Route::get('stations/{id}', [StationApiController::class, 'show'])
+    ->where('id', '[0-9]+'); //get the details of station- if occupied:get the order list
+Route::patch('stations/{id}', [StationApiController::class, 'destroy'])
+    ->where('id', '[0-9]+');
 
 Route::post('login', [UserApiController::class, 'login']);

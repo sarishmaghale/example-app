@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\ProductInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductService
 {
@@ -21,11 +22,19 @@ class ProductService
     public function updateProductInfo($id, $data)
     {
         $product = $this->productRepo->getProductById($id);
-        return $this->productRepo->updateProduct($product, $data);
+        if (!$product) {
+            return null;
+        }
+        $this->productRepo->updateProduct($product, $data);
+        return  $product->fresh();
     }
     public function fetchProductById(int $id)
     {
-        return $this->productRepo->getProductById($id);
+        $product = $this->productRepo->getProductById($id);
+        if (!$product) {
+            throw new ModelNotFoundException("Product not found");
+        }
+        return $product;
     }
     public function activateSoftDelete(int $id)
     {

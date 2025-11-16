@@ -21,7 +21,7 @@ class OrderApiController extends Controller
         $data = $request->validated();
         $ordersOfStation = $this->orderService->addOrdersToStation($data);
         if ($ordersOfStation) {
-            return $this->successResponse($ordersOfStation, "Order added successfully");
+            return $this->successResponse(data: $ordersOfStation, message: "Order added successfully");
         }
         return $this->errorResponse("failed to add");
     }
@@ -30,7 +30,7 @@ class OrderApiController extends Controller
     {
         $order = $this->orderService->fetchOrderById($id);
         if ($order) {
-            return $this->successResponse($order, "Order displayed successfully");
+            return $this->successResponse(data: $order, message: "Order displayed successfully");
         }
         return $this->errorResponse();
     }
@@ -40,7 +40,7 @@ class OrderApiController extends Controller
         $data = $request->validatedData();
         $renewedOrders = $this->orderService->removeOrderFromStation($data);
         if ($renewedOrders) {
-            return $this->successResponse("Order removed successfully");
+            return $this->successResponse(message: "Order removed successfully");
         }
         return $this->errorResponse();
     }
@@ -50,7 +50,7 @@ class OrderApiController extends Controller
         $data = $request->validated();
         $updatedOrder = $this->orderService->updateOrder($data, $id);
         $response = $updatedOrder !== null ?
-            $this->successResponse($updatedOrder, "Order updated successfully") :
+            $this->successResponse(data: $updatedOrder, message: "Order updated successfully") :
             $this->errorResponse();
         return $response;
     }
