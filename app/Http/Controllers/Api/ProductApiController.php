@@ -29,7 +29,7 @@ class ProductApiController extends Controller
         $products = $request->validated();
         $result = $this->productService->addNewProduct($products);
         if ($result !== null) {
-            return $this->successResponse(data: $result, message: "Product added successfully");
+            return $this->successResponse(data: $result, message: "Product added successfully", code: 201);
         }
         return $this->errorResponse();
     }
